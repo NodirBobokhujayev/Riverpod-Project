@@ -64,13 +64,17 @@ class SocketNotifier extends StateNotifier<SocketState> {
     state = SocketState.connecting;
     await repository.connect(
       onConnected: () async {
-        // sendLocation();
         state = SocketState.connected;
+        listenLocation();
       },
       onError: (error) {
         state = SocketState.error;
         disconnect();
       },
+      onDone: () {
+        state = SocketState.error;
+        disconnect();
+      }
     );
   }
 
@@ -121,6 +125,7 @@ class SocketNotifier extends StateNotifier<SocketState> {
         }else{
           connect();
         }
+        Future.delayed(Duration(seconds: 5));
       } else {
         print("📵 Internet yo‘q, kutyapmiz...");
       }

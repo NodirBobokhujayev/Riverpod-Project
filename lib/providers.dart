@@ -14,5 +14,9 @@ final socketNotifierProvider = StateNotifierProvider<SocketNotifier, SocketState
 
 final socketStreamProvider = StreamProvider.autoDispose<dynamic>((ref) {
   final repo = ref.watch(socketRepositoryProvider);
+
+  ref.onDispose(() {
+    repo.disconnect(); // ichida controller.close() bor
+  });
   return repo.stream;
 });
